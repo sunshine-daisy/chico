@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Chico — Recall Program</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Karla:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#FAF3E8; --card:#FFFBF4; --ink:#2E2119; --bark:#6B4A35; --muted:#8A6E5A;
+  --tan:#D8B98F; --sand:#EFE0C8; --sky:#86B8D4; --sky-deep:#3A7A99; --sky-wash:#E3F0F6;
+  --line:rgba(107,74,53,.20); --shadow:0 1px 0 rgba(107,74,53,.10);
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#1C1511; --card:#241C16; --ink:#F2E6D6; --bark:#C9A77F; --muted:#A88E76;
+    --tan:#A98356; --sand:#33271E; --sky:#8FC2DD; --sky-deep:#A8D2E8; --sky-wash:#1E2B33;
+    --line:rgba(216,185,143,.20); --shadow:none;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#1C1511; --card:#241C16; --ink:#F2E6D6; --bark:#C9A77F; --muted:#A88E76;
+  --tan:#A98356; --sand:#33271E; --sky:#8FC2DD; --sky-deep:#A8D2E8; --sky-wash:#1E2B33;
+  --line:rgba(216,185,143,.20); --shadow:none;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:Karla,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;font-size:16px;line-height:1.55}
+a{color:var(--sky-deep);text-underline-offset:2px}
+:focus-visible{outline:2px solid var(--sky-deep);outline-offset:2px;border-radius:4px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+.wrap{max-width:640px;margin:0 auto;padding:0 18px 72px}
+
+header.hero{padding:34px 0 20px}
+h1{font-family:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;font-weight:800;font-size:clamp(50px,16vw,78px);
+  line-height:.92;margin:0;letter-spacing:-.02em}
+.tagline{font-size:14px;color:var(--muted);margin:10px 0 0;max-width:36ch}
+.tagline b{color:var(--bark);font-weight:700}
+.track{display:flex;gap:4px;margin:22px 0 8px}
+.seg{flex:1;height:26px;border-radius:3px;background:var(--sand);position:relative;overflow:hidden}
+.seg i{position:absolute;inset:0;transform-origin:left;transform:scaleX(0);background:var(--tan);transition:transform .35s ease}
+.seg.done i{background:var(--sky)}
+.seg span{position:absolute;inset:0;display:grid;place-items:center;font-size:10px;font-weight:700;color:var(--bark)}
+.trackfoot{display:flex;justify-content:space-between;font-size:12px;color:var(--muted)}
+
+section{margin:28px 0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px;box-shadow:var(--shadow)}
+h2{font-family:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;font-size:22px;font-weight:600;margin:0 0 4px;letter-spacing:-.01em}
+h3{font-family:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;font-size:17px;font-weight:600;margin:0}
+.sub{font-size:13px;color:var(--muted);margin:0 0 14px}
+p{margin:0 0 10px}
+.small{font-size:14px}
+
+.rules{display:grid;gap:10px}
+.rule{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--sky);border-radius:8px;padding:13px 15px}
+.rule h3{margin-bottom:3px}
+.rule p{font-size:14px;color:var(--muted);margin:0}
+.rule.warn{border-left-color:var(--tan)}
+
+.chk{appearance:none;-webkit-appearance:none;flex:none;width:24px;height:24px;
+  border:1.5px solid var(--line);border-radius:6px;background:var(--paper);cursor:pointer;position:relative;
+  transition:background .15s,border-color .15s}
+.chk:checked{background:var(--sky);border-color:var(--sky)}
+.chk:checked::after{content:"";position:absolute;inset:3px;background:var(--card);
+  -webkit-mask:var(--paw) center/contain no-repeat;mask:var(--paw) center/contain no-repeat}
+.row{display:flex;gap:11px;align-items:flex-start;padding:9px 0;border-top:1px solid var(--line)}
+.row:first-child{border-top:0}
+.row label{flex:1;font-size:15px;cursor:pointer}
+.row label em{display:block;font-style:normal;font-size:13px;color:var(--muted);margin-top:2px}
+.row input:checked ~ label{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--tan)}
+.row input:checked ~ label em{text-decoration:none}
+
+.weeks{display:grid;gap:9px;margin-top:12px}
+.week{display:flex;align-items:center;gap:10px}
+.wlabel{font-size:12px;font-weight:700;color:var(--muted);width:40px;flex:none}
+.days{display:flex;gap:5px;flex:1}
+.day{flex:1;aspect-ratio:1/1;max-width:38px;border:1.5px solid var(--line);border-radius:6px;
+  background:var(--paper);cursor:pointer;padding:0;position:relative;transition:background .15s,border-color .15s}
+.day[aria-pressed="true"]{background:var(--tan);border-color:var(--tan)}
+.day[aria-pressed="true"]::after{content:"";position:absolute;inset:22%;background:var(--card);
+  -webkit-mask:var(--paw) center/contain no-repeat;mask:var(--paw) center/contain no-repeat}
+
+.phase{background:var(--card);border:1px solid var(--line);border-radius:10px;margin-bottom:10px;overflow:hidden;box-shadow:var(--shadow)}
+.phead{width:100%;display:flex;align-items:center;gap:12px;text-align:left;background:none;border:0;
+  padding:14px 15px;cursor:pointer;color:inherit;font:inherit}
+.pnum{flex:none;width:34px;height:34px;border-radius:8px;background:var(--sky-wash);color:var(--sky-deep);
+  display:grid;place-items:center;font-family:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;font-weight:700;font-size:15px}
+.phead .t{flex:1}
+.phead .t strong{display:block;font-family:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;font-size:17px;font-weight:600}
+.phead .t span{font-size:12.5px;color:var(--muted)}
+.caret{flex:none;color:var(--muted);transition:transform .2s}
+.phase.open .caret{transform:rotate(180deg)}
+.pbody{display:none;padding:0 15px 16px;border-top:1px solid var(--line)}
+.phase.open .pbody{display:block}
+.pbody > p:first-child{margin-top:12px;font-size:14.5px}
+.phase.locked .pnum{background:var(--sand);color:var(--muted)}
+.phase.locked .phead .t strong{color:var(--muted)}
+.lockmsg{background:var(--sand);border-radius:8px;padding:12px 13px;font-size:14px;margin-top:12px;color:var(--bark)}
+
+.callout{background:var(--sky-wash);border-radius:8px;padding:11px 13px;font-size:14px;margin:12px 0 0}
+.callout strong{color:var(--sky-deep)}
+
+.gate{background:var(--card);border:2px solid var(--sky);border-radius:10px;padding:16px}
+.gate .row{border-top:0;padding:4px 0}
+.gate label{font-weight:700}
+
+.rhythm{display:grid;gap:8px}
+.rday{display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-top:1px solid var(--line)}
+.rday:first-child{border-top:0}
+.rtag{flex:none;width:92px;font-size:12px;font-weight:700;color:var(--sky-deep);line-height:1.35}
+.rtxt{flex:1;font-size:14.5px}
+
+label.fl{display:block;font-size:12.5px;font-weight:700;color:var(--muted);margin:12px 0 5px}
+input[type=text],input[type=date],input[type=number],textarea{
+  width:100%;font-family:inherit;font-size:15px;padding:10px 11px;color:var(--ink);
+  background:var(--paper);border:1.5px solid var(--line);border-radius:8px}
+textarea{resize:vertical;min-height:70px}
+.two{display:flex;gap:10px}
+.two > div{flex:1}
+.btn{font-family:inherit;font-size:15px;font-weight:700;padding:11px 18px;border-radius:8px;
+  background:var(--sky-deep);color:#fff;border:0;cursor:pointer;margin-top:14px}
+:root:not([data-theme="light"]) .btn{color:#14212A}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]) .btn{color:#fff}}
+.btn.ghost{background:none;color:var(--muted);border:1.5px solid var(--line);font-weight:500;padding:7px 13px;font-size:13px;margin:0}
+
+.logitem{border-top:1px solid var(--line);padding:12px 0;display:flex;gap:12px}
+.logitem:first-of-type{border-top:0}
+.logdate{font-family:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;font-weight:600;font-size:13px;color:var(--sky-deep);width:56px;flex:none;line-height:1.3}
+.logbody{flex:1;font-size:14.5px}
+.logmeta{font-size:12.5px;color:var(--muted);margin-top:3px}
+.empty{color:var(--muted);font-size:14px;padding:14px 0;text-align:center}
+
+.links{list-style:none;padding:0;margin:0}
+.links li{border-top:1px solid var(--line);padding:12px 0}
+.links li:first-child{border-top:0}
+.links a{font-weight:700;font-size:15px;display:block}
+.links em{font-style:normal;font-size:13px;color:var(--muted);display:block;margin-top:2px}
+
+footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);font-size:12.5px;color:var(--muted);
+  display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.status{font-size:11.5px;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <h1>Chico</h1>
+  <p class="tagline">Eight weeks to build a recall that doesn't need a treat in your hand. <b>The collar comes later, or not at all.</b></p>
+  <div class="track" id="track"></div>
+  <div class="trackfoot"><span id="pct">0% complete</span><span>Week 1 &rarr; 8</span></div>
+</header>
+
+<section>
+  <h2>What we're actually fixing</h2>
+  <div class="rules">
+    <div class="rule">
+      <h3>He has a lure, not a recall</h3>
+      <p>He comes to the treat, not to the word. The cue has never predicted anything on its own, so it's noise. That's the whole problem.</p>
+    </div>
+    <div class="rule">
+      <h3>The fix is the order of operations</h3>
+      <p>Empty hands. Say the word once. He arrives. <em>Then</em> food appears. Showing food first is what built the lure and it's the habit that has to die.</p>
+    </div>
+    <div class="rule warn">
+      <h3>The air can is retired</h3>
+      <p>It did its job at the door and the phrase holds on its own now. Leave it there — no new behaviors built that way, and nothing like it goes near the recall.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Set up</h2>
+  <div class="card">
+    <div id="prep"></div>
+    <label class="fl" for="cue">His new recall cue</label>
+    <input type="text" id="cue" placeholder="here / aquí / vamos" autocomplete="off">
+    <label class="fl" for="start">Day 1 date</label>
+    <input type="date" id="start">
+  </div>
+</section>
+
+<section>
+  <h2>Chico's week</h2>
+  <p class="sub">Timing matters more than volume. He can't learn anything the evening after daycare.</p>
+  <div class="card">
+    <div class="rhythm">
+      <div class="rday"><div class="rtag">Daycare days<br>&times;3</div>
+        <div class="rtxt">One 10-minute session in the morning before drop-off. Nothing at night — he's cooked. Same facility every week, no rotating.</div></div>
+      <div class="rday"><div class="rtag">Home days</div>
+        <div class="rtxt">Two 10-minute recall sessions. Plus one distance session with other dogs in view.</div></div>
+      <div class="rday"><div class="rtag">Weekends</div>
+        <div class="rtxt">Yard work on the long line once you're past week 4. Sniff walks in quiet places.</div></div>
+      <div class="rday"><div class="rtag">Every walk</div>
+        <div class="rtxt">Five minutes of sit, down and hand targets in the driveway before you move. Take the edge off where it's boring.</div></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>The program</h2>
+  <p class="sub">Tap a phase to open it. Check a paw for each day you train.</p>
+  <div id="phases"></div>
+</section>
+
+<section>
+  <h2>The gate</h2>
+  <p class="sub">The collar phase stays locked until both of these are true.</p>
+  <div class="gate">
+    <div id="gate"></div>
+    <div class="callout" id="gatemsg"><strong>Not yet.</strong> Keep working the food phases. There's a real chance you never need the collar at all — that's the best outcome, not a failure.</div>
+  </div>
+</section>
+
+<section>
+  <h2>Session log</h2>
+  <div class="card">
+    <div class="two">
+      <div><label class="fl" for="sdate">Date</label><input type="date" id="sdate"></div>
+      <div><label class="fl" for="sscore">Nailed, out of 10</label><input type="number" id="sscore" min="0" max="10" placeholder="—" inputmode="numeric"></div>
+    </div>
+    <label class="fl" for="snotes">What happened</label>
+    <textarea id="snotes" placeholder="Where, what distractions, whether food was visible, where he broke down."></textarea>
+    <button class="btn" id="addlog">Save session</button>
+  </div>
+  <div class="card" style="margin-top:12px"><div id="log"></div></div>
+</section>
+
+<section>
+  <h2>Gear</h2>
+  <div class="card"><div id="gear"></div></div>
+</section>
+
+<section>
+  <h2>Read and watch</h2>
+  <div class="card">
+    <ul class="links">
+      <li><a href="https://www.youtube.com/channel/UCortXxJdZYbHCrOa3nddr6g" target="_blank" rel="noopener">Larry Krohn on YouTube</a><em>Free. Recall building and, later, e-collar conditioning.</em></li>
+      <li><a href="https://pakmasters.com/" target="_blank" rel="noopener">Pak Masters — Larry Krohn</a><em>His site. Book, courses and virtual consults.</em></li>
+      <li><a href="https://leerburg.com/flix/" target="_blank" rel="noopener">Leerburg free video library</a><em>Hundreds of free clips. Michael Ellis on markers, motivation and pressure.</em></li>
+      <li><a href="https://university.leerburg.com/Catalog/viewCourse/cid/238" target="_blank" rel="noopener">Remote Collar Master Class — Michael Ellis</a><em>Only worth buying if you get to phase 5.</em></li>
+      <li><a href="https://www.ecollar.com/product/me-300-micro-educator-1-dog/" target="_blank" rel="noopener">ME-300 Micro Educator</a><em>RX-070 micro receiver, contact points closer together, rotates 90° for fore-and-aft fit.</em></li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <h2>Sync</h2>
+  <p class="sub">Paste your Apps Script web app URL to sync this page across devices.</p>
+  <div class="card">
+    <label class="fl" for="syncurl">Web app URL</label>
+    <input type="text" id="syncurl" placeholder="https://script.google.com/macros/s/.../exec" autocomplete="off" spellcheck="false">
+    <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">
+      <button class="btn" id="synctest">Connect &amp; pull</button>
+      <span class="small" id="syncstate" style="color:var(--muted);margin-top:14px">Not connected</span>
+    </div>
+    <div class="callout"><strong>Local save happens first, always.</strong> Sync runs after. If the sheet is unreachable your progress is still on this device — it pushes up next time it connects.</div>
+  </div>
+</section>
+
+<footer>
+  <span class="status" id="status">&nbsp;</span>
+  <button class="btn ghost" id="reset">Clear all progress</button>
+</footer>
+
+</div>
+
+<script>
+document.documentElement.style.setProperty('--paw',
+  "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cellipse cx='32' cy='44' rx='15' ry='13'/%3E%3Cellipse cx='14' cy='27' rx='7' ry='9'/%3E%3Cellipse cx='50' cy='27' rx='7' ry='9'/%3E%3Cellipse cx='24' cy='13' rx='7' ry='9'/%3E%3Cellipse cx='40' cy='13' rx='7' ry='9'/%3E%3C/svg%3E\")");
+
+const PREP = [
+  ["p1","Pick the new cue and write it down","Zero history. Never the old word."],
+  ["p2","Tell the whole house the new cue and the rule","One person waving a treat first undoes a week."],
+  ["p3","Food lives in a pouch or on the counter — never in your hand first",""],
+  ["p4","Light line on him indoors","So ignoring you isn't one of the options while the word is still new."],
+  ["p5","Lock in one daycare facility, same three days","Stop rotating. Same staff, same group, same routine."]
+];
+const GEAR = [
+  ["g1","15 ft biothane long line","For indoor and early yard work."],
+  ["g2","30 ft biothane long line","Weeks 5 onward."],
+  ["g3","Treat pouch that opens one-handed","Fumbling for food is lost timing — and it tips him off before he moves."],
+  ["g4","Real food rewards","Rotisserie chicken, string cheese, hot dog. Cut small."],
+  ["g5","Flirt pole","Ten minutes in the yard burns the chase drive he's aiming at other dogs."],
+  ["g6","ME-300 Micro Educator — only if you reach phase 5","Buy the cheaper listing. Skip the bundled clicker. Confirm longer contact points for his coat."]
+];
+const GATE = [
+  ["gate1","9 out of 10 recalls indoors, no food visible"],
+  ["gate2","9 out of 10 in the fenced yard on a 15 ft line"]
+];
+
+const PHASES = [
+  {n:"1", title:"Charge the word", when:"Weeks 1–2 · indoors", weeks:[1,2],
+   body:"<p>You're not asking for a behavior yet. You're wiring a sound to a payoff. Say the cue, food appears — he doesn't even have to move at first. Twenty reps a day in short bursts.</p>",
+   items:[
+     ["a1","Empty hands, every rep","If he can see food before he moves, you're building the lure again."],
+     ["a2","Say it once. Ever.","Repeating teaches him the first one is a suggestion."],
+     ["a3","Touch his collar, then feed — every arrival","Hands near his neck have to mean chicken."],
+     ["a4","Pay every single time","No lottery. You're building a reflex."],
+     ["a5","End before he's bored","Ten minutes max."]
+   ],
+   note:"<strong>He already proved he can take a verbal cue under arousal</strong> — the door. This is the same mechanism, built the other way round."},
+  {n:"2", title:"Distance and drive", when:"Weeks 3–4 · indoors", weeks:[3,4],
+   body:"<p>Same rules, more room. Now you want him coming <em>fast</em>, not strolling in. Speed is what survives distraction later.</p>",
+   items:[
+     ["b1","Run away from him, clapping, when he stalls","Never repeat the cue. Soft dogs chase — use it."],
+     ["b2","Two-person ping-pong down the hallway","Opposite ends of the house, alternate calls. He'll love it."],
+     ["b3","Call him out of mild distraction","A chew, a window, a sniff. Not the front door yet."],
+     ["b4","Release him back to what he left","Coming to you shouldn't end the fun."]
+   ],
+   note:"<strong>If he fails twice in a row, the picture is too hard.</strong> Back up, get an easy win, end there."},
+  {n:"3", title:"Yard on a line", when:"Weeks 5–6 · 15 ft line", weeks:[5,6],
+   body:"<p>Fenced yard, line on, same rules. Outdoors is a different world to him — expect to lose ground at first and build it back fast.</p>",
+   items:[
+     ["c1","Start in the yard with nothing happening",""],
+     ["c2","Move to 30 ft once he's solid at 15",""],
+     ["c3","Recall randomly, mostly followed by release","10–15 per session. Most end in him going back to what he was doing."],
+     ["c4","Add one distraction at a time","Never distance and distraction in the same session."]
+   ],
+   note:"<strong>Train him in the morning on daycare days.</strong> Evenings after daycare are wasted reps."},
+  {n:"4", title:"Other dogs, at distance", when:"Runs alongside · non-daycare days", weeks:[],
+   body:"<p>Separate track from the recall, same eight weeks. He sees another dog and expects play, because four days a week that's what other dogs have meant. You're changing the prediction.</p>",
+   items:[
+     ["d1","Work at a distance where he can still eat","50 to 100 feet. If he won't take food, you're too close."],
+     ["d2","Dog appears → you feed. Dog leaves → food stops.","You're not asking for anything. Other dogs now mean chicken from you."],
+     ["d3","Close distance only when he looks at a dog and turns back on his own",""],
+     ["d4","Surprised up close? Cross the street or turn and go.","Every lunge he rehearses makes the next one easier."],
+     ["d5","Pay him for noticing and not reacting — before he fires, not after",""]
+   ],
+   note:"<strong>Still stuck at distance after six weeks?</strong> Get a balanced trainer out for one session. That's a different problem than the recall."},
+  {n:"5", title:"The collar", when:"Week 8+ · locked", weeks:[7,8], locked:true,
+   body:"<p>Only if you want him genuinely off-leash on trails, and only after both gate conditions are met. The collar doesn't teach the recall — it reaches him at 40 feet when a rabbit moves and chicken is worth nothing.</p>",
+   items:[
+     ["e1","Wear it turned off for 2 weeks first","3+ hours a day, rotate contact points every 2 hours, snug and high on the neck, on its own strap."],
+     ["e2","Clip two small patches for the contact points","That curl will float the points off his skin. Check with the test light before every session."],
+     ["e3","First session with a balanced trainer watching","Non-negotiable given the startle history. Getting his working level wrong is how this goes sideways."],
+     ["e4","Sequence: stim on → cue once → guide in on the line → stim OFF the moment he turns → mark → pay big",""],
+     ["e5","Never use it around other dogs","Not in week 8, not ever without a trainer standing next to you."]
+   ],
+   note:"<strong>If he freezes, shuts down or vocalizes: stop.</strong> Drop the level, go back a phase, get eyes on it."}
+];
+
+let state = {checks:{}, days:{}, cue:"", start:"", sessions:[]};
+let store=null, saveTimer=null, syncUrl="";
+const LOCAL_KEY="chico-program", URL_KEY="chico-sync-url";
+
+function syncStatus(t,ok){
+  const el=document.getElementById("syncstate");
+  if(!el) return;
+  el.textContent=t;
+  el.style.color = ok===true ? "var(--sky-deep)" : ok===false ? "var(--bark)" : "var(--muted)";
+}
+
+/* JSONP read — Apps Script serves this reliably from any origin */
+function jsonp(url){
+  return new Promise((res,rej)=>{
+    const cb="chicocb"+Date.now()+Math.floor(Math.random()*1000);
+    const s=document.createElement("script");
+    const timer=setTimeout(()=>{cleanup();rej(new Error("timeout"));},15000);
+    function cleanup(){clearTimeout(timer);try{delete window[cb];}catch(e){}if(s.parentNode)s.parentNode.removeChild(s);}
+    window[cb]=d=>{cleanup();res(d);};
+    s.src=url+(url.indexOf("?")>-1?"&":"?")+"callback="+cb;
+    s.onerror=()=>{cleanup();rej(new Error("network"));};
+    document.head.appendChild(s);
+  });
+}
+
+async function remoteGet(){
+  if(store){ const s=await store.get(); return (s&&s.data)?s.data:((s&&s.checks)?s:null); }
+  if(syncUrl){ const r=await jsonp(syncUrl); return (r&&r.ok)?r.data:null; }
+  return null;
+}
+async function remoteSet(data){
+  if(store){ await store.set(data); return; }
+  if(!syncUrl) return;
+  const body=JSON.stringify({data});
+  const opts={method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body};
+  try{
+    const r=await fetch(syncUrl,opts);
+    if(!r.ok) throw new Error("http "+r.status);
+  }catch(e){
+    /* some browsers block the redirect response — fire and forget */
+    await fetch(syncUrl,Object.assign({mode:"no-cors"},opts));
+  }
+}
+
+async function initStore(){
+  try{ syncUrl=localStorage.getItem(URL_KEY)||""; }catch(e){}
+  try{
+    if(window.claude && typeof window.claude.use==="function"){
+      const db=await window.claude.use("db");
+      if(db) store=db.doc("training/chico");
+    }
+  }catch(e){}
+  const su=document.getElementById("syncurl");
+  if(su) su.value=syncUrl;
+  await load();
+}
+async function load(){
+  try{ const raw=localStorage.getItem(LOCAL_KEY); if(raw) state=Object.assign(state,JSON.parse(raw)); }catch(e){}
+  render();
+  if(!store && !syncUrl){ syncStatus("Not connected — this browser only"); return; }
+  try{
+    const remote=await remoteGet();
+    if(remote){
+      state=Object.assign(state,remote);
+      try{ localStorage.setItem(LOCAL_KEY,JSON.stringify(state)); }catch(e){}
+      render();
+    }
+    syncStatus(store?"Synced to your Claude account":"Synced with your sheet",true);
+  }catch(e){ syncStatus("Couldn't reach the sheet — saving locally",false); }
+}
+function save(){
+  try{ localStorage.setItem(LOCAL_KEY,JSON.stringify(state)); }catch(e){}
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(async()=>{
+    if(!store && !syncUrl) return;
+    try{
+      await remoteSet(state); flash("Saved");
+      syncStatus(store?"Synced to your Claude account":"Synced with your sheet",true);
+    }catch(e){ flash("Saved on this device"); syncStatus("Sync failed — saved locally",false); }
+  },800);
+}
+function flash(t){const el=document.getElementById("status");el.textContent=t;setTimeout(()=>{el.innerHTML="&nbsp;"},1800);}
+
+function bindChecks(scope){
+  scope.querySelectorAll(".chk").forEach(el=>{
+    el.addEventListener("change",()=>{ state.checks[el.id]=el.checked; save(); renderTrack(); applyGate(); });
+  });
+}
+function checkList(container, rows){
+  container.innerHTML = rows.map(([id,label,hint])=>`
+    <div class="row"><input class="chk" type="checkbox" id="${id}" ${state.checks[id]?"checked":""}>
+    <label for="${id}">${label}${hint?`<em>${hint}</em>`:""}</label></div>`).join("");
+  bindChecks(container);
+}
+
+function gateOpen(){ return GATE.every(([id])=>state.checks[id]); }
+function applyGate(){
+  const open=gateOpen();
+  const p=document.querySelector('.phase[data-locked="1"]');
+  if(p){
+    p.classList.toggle("locked",!open);
+    p.querySelector(".phead .t span").textContent = open ? "Unlocked · start when you're ready" : "Week 8+ · locked";
+    const lm=p.querySelector(".lockmsg"); if(lm) lm.style.display = open ? "none" : "block";
+  }
+  const g=document.getElementById("gatemsg");
+  g.innerHTML = open
+    ? "<strong>Gate open.</strong> Phase 5 is unlocked. Order the ME-300 and let him wear it turned off for two weeks before anything else."
+    : "<strong>Not yet.</strong> Keep working the food phases. There's a real chance you never need the collar at all — that's the best outcome, not a failure.";
+}
+
+function renderPhases(){
+  const host=document.getElementById("phases");
+  host.innerHTML = PHASES.map((p,i)=>`
+    <div class="phase${p.locked?" locked":""}" data-i="${i}"${p.locked?' data-locked="1"':""}>
+      <button class="phead" type="button">
+        <span class="pnum">${p.n}</span>
+        <span class="t"><strong>${p.title}</strong><span>${p.when}</span></span>
+        <svg class="caret" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 6l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+      <div class="pbody">
+        ${p.locked?'<div class="lockmsg">Locked until both gate conditions below are checked. Opening it early is the most common way this goes wrong.</div>':""}
+        ${p.body}
+        ${p.weeks.length?`<div class="weeks">${p.weeks.map(w=>`<div class="week"><span class="wlabel">Wk ${w}</span><div class="days">${
+          [1,2,3,4,5,6,7].map(d=>{const k=`w${w}d${d}`;
+            return `<button class="day" type="button" data-k="${k}" aria-pressed="${state.days[k]?"true":"false"}" aria-label="Week ${w} day ${d}"></button>`;}).join("")
+        }</div></div>`).join("")}</div>`:""}
+        <div style="margin-top:14px">${p.items.map(([id,label,hint])=>`
+          <div class="row"><input class="chk" type="checkbox" id="${id}" ${state.checks[id]?"checked":""}>
+          <label for="${id}">${label}${hint?`<em>${hint}</em>`:""}</label></div>`).join("")}</div>
+        ${p.note?`<div class="callout">${p.note}</div>`:""}
+      </div>
+    </div>`).join("");
+
+  host.querySelectorAll(".phead").forEach(b=>b.addEventListener("click",()=>b.parentElement.classList.toggle("open")));
+  host.querySelectorAll(".day").forEach(b=>{
+    b.addEventListener("click",()=>{
+      const k=b.dataset.k, on=b.getAttribute("aria-pressed")==="true";
+      b.setAttribute("aria-pressed",on?"false":"true");
+      if(on) delete state.days[k]; else state.days[k]=true;
+      save(); renderTrack();
+    });
+  });
+  bindChecks(host);
+  host.querySelector(".phase").classList.add("open");
+}
+
+function renderTrack(){
+  const t=document.getElementById("track");
+  if(!t.children.length) t.innerHTML=[1,2,3,4,5,6,7,8].map(w=>`<div class="seg" data-w="${w}"><i></i><span>${w}</span></div>`).join("");
+  let totalDays=0, doneDays=0;
+  [1,2,3,4,5,6,7,8].forEach(w=>{
+    let d=0; for(let i=1;i<=7;i++) if(state.days[`w${w}d${i}`]) d++;
+    totalDays+=7; doneDays+=d;
+    const seg=t.querySelector(`[data-w="${w}"]`);
+    seg.querySelector("i").style.transform=`scaleX(${d/7})`;
+    seg.classList.toggle("done",d===7);
+  });
+  const allIds=[...PREP,...GEAR,...GATE,...PHASES.flatMap(p=>p.items)].map(r=>r[0]);
+  const doneChecks=allIds.filter(id=>state.checks[id]).length;
+  document.getElementById("pct").textContent=Math.round(((doneDays+doneChecks)/(totalDays+allIds.length))*100)+"% complete";
+}
+
+function renderLog(){
+  const host=document.getElementById("log");
+  if(!state.sessions.length){ host.innerHTML=`<div class="empty">No sessions yet. Log the first one after today's work.</div>`; return; }
+  const sorted=[...state.sessions].sort((a,b)=>(b.date||"").localeCompare(a.date||""));
+  host.innerHTML=sorted.map(s=>{
+    const d=s.date?new Date(s.date+"T12:00:00"):null;
+    const label=d?d.toLocaleDateString(undefined,{month:"short",day:"numeric"}):"—";
+    const meta=(s.score!==""&&s.score!=null)?`${s.score}/10 recalls`:"";
+    return `<div class="logitem"><div class="logdate">${label}</div>
+      <div class="logbody">${s.notes?escapeHtml(s.notes):"<span style='color:var(--muted)'>No notes</span>"}
+      ${meta?`<div class="logmeta">${meta}</div>`:""}</div></div>`;
+  }).join("");
+}
+function escapeHtml(s){return s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+
+function render(){
+  checkList(document.getElementById("prep"),PREP);
+  checkList(document.getElementById("gear"),GEAR);
+  document.getElementById("gate").innerHTML=GATE.map(([id,label])=>`
+    <div class="row"><input class="chk" type="checkbox" id="${id}" ${state.checks[id]?"checked":""}>
+    <label for="${id}">${label}</label></div>`).join("");
+  bindChecks(document.getElementById("gate"));
+  renderPhases();
+  renderTrack();
+  renderLog();
+  applyGate();
+  document.getElementById("cue").value=state.cue||"";
+  document.getElementById("start").value=state.start||"";
+}
+
+["cue","start"].forEach(id=>{
+  document.getElementById(id).addEventListener("input",e=>{ state[id]=e.target.value; save(); });
+});
+
+document.getElementById("synctest").addEventListener("click",async()=>{
+  syncUrl=document.getElementById("syncurl").value.trim();
+  try{ localStorage.setItem(URL_KEY,syncUrl); }catch(e){}
+  if(!syncUrl){ syncStatus("Not connected — this browser only"); return; }
+  syncStatus("Connecting…");
+  try{
+    const remote=await remoteGet();
+    if(remote){ state=Object.assign(state,remote); render(); }
+    await remoteSet(state);
+    syncStatus("Connected and synced",true);
+  }catch(e){ syncStatus("Couldn't reach that URL — check the deployment access setting",false); }
+});
+
+document.getElementById("addlog").addEventListener("click",()=>{
+  const date=document.getElementById("sdate").value;
+  const score=document.getElementById("sscore").value;
+  const notes=document.getElementById("snotes").value.trim();
+  if(!date && !notes){ flash("Add a date or a note first"); return; }
+  state.sessions.push({id:Date.now(),date,score,notes});
+  document.getElementById("sscore").value="";
+  document.getElementById("snotes").value="";
+  save(); renderLog(); flash("Session logged");
+});
+
+document.getElementById("reset").addEventListener("click",()=>{
+  if(!confirm("Clear every check, day and session for Chico? This can't be undone.")) return;
+  state={checks:{},days:{},cue:"",start:"",sessions:[]};
+  save(); render();
+});
+
+document.getElementById("sdate").value=new Date().toISOString().slice(0,10);
+render();
+initStore();
+</script>
+</body>
+</html>
