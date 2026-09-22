@@ -141,22 +141,77 @@ textarea{resize:vertical;min-height:70px}
 .links a{font-weight:700;font-size:15px;display:block}
 .links em{font-style:normal;font-size:13px;color:var(--muted);display:block;margin-top:2px}
 
-.guidelink{display:inline-block;margin:12px 0 14px;font-size:14px;font-weight:700;text-decoration:none;
-  padding:8px 13px;border-radius:8px;background:var(--sky-wash);color:var(--sky-deep)}
+.guidelink{display:inline-block;margin:12px 0 14px;font-size:14px;font-weight:700;text-decoration:none;padding:8px 13px;border-radius:8px;background:var(--sky-wash);color:var(--sky-deep)}
 footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);font-size:12.5px;color:var(--muted);
   display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
 .status{font-size:11.5px;color:var(--muted)}
+
+/* ---- tabs ---- */
+.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--paper);
+  margin:0 -18px;padding:10px 18px;border-bottom:1px solid var(--line)}
+.tabbar{display:flex;gap:4px;background:var(--sand);padding:4px;border-radius:10px;max-width:640px;margin:0 auto}
+.tab{flex:1;border:0;background:none;font:inherit;font-weight:700;font-size:14.5px;color:var(--muted);
+  padding:9px 10px;border-radius:7px;cursor:pointer}
+.tab[aria-selected="true"]{background:var(--card);color:var(--ink);box-shadow:0 1px 2px rgba(46,33,25,.12)}
+.panel[hidden]{display:none}
+.howto{font-size:13.5px;margin-top:12px;color:var(--muted)}
+.howto a{font-weight:700;text-decoration:none}
+
+/* ---- guide ---- */
+.ghero{padding:26px 0 6px}
+.gh1{font-family:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;font-weight:800;
+  font-size:clamp(36px,11vw,56px);line-height:.95;margin:0;letter-spacing:-.02em}
+.jump{display:flex;gap:6px;flex-wrap:wrap;margin:16px 0 0}
+.jump a{font-size:13px;font-weight:700;text-decoration:none;padding:6px 11px;border-radius:999px;background:var(--sand);color:var(--bark)}
+.grules{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--sky);border-radius:8px;padding:14px 16px}
+.grules ol{margin:0;padding-left:20px}
+.grules li{font-size:14.5px;padding:3px 0}
+.grules li b{color:var(--bark)}
+.gsec{scroll-margin-top:72px}
+.ex{background:var(--card);border:1px solid var(--line);border-radius:10px;margin-bottom:10px;overflow:hidden;box-shadow:var(--shadow);scroll-margin-top:72px}
+.exhead{width:100%;display:flex;align-items:center;gap:12px;text-align:left;background:none;border:0;padding:14px 15px;cursor:pointer;color:inherit;font:inherit}
+.exhead .t{flex:1;min-width:0}
+.exhead strong{display:block;font-family:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;font-size:18px;font-weight:600;line-height:1.2}
+.exhead .when{font-size:12.5px;color:var(--muted)}
+.cuetag{flex:none;font-size:12px;font-weight:700;padding:4px 9px;border-radius:6px;background:var(--sky-wash);color:var(--sky-deep);white-space:nowrap}
+.cuetag.none{background:var(--sand);color:var(--muted)}
+.ex.open .caret{transform:rotate(180deg)}
+.exbody{display:none;padding:2px 15px 16px;border-top:1px solid var(--line)}
+.ex.open .exbody{display:block}
+.why{font-size:14.5px;margin:12px 0}
+.glabel{font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:16px 0 6px}
+.need{font-size:14.5px;margin:0}
+.steps{list-style:none;padding:0;margin:0;counter-reset:s}
+.steps li{counter-increment:s;display:flex;gap:11px;padding:7px 0;font-size:15px}
+.steps li::before{content:counter(s);flex:none;width:24px;height:24px;border-radius:6px;background:var(--tan);color:var(--card);
+  font-family:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;font-weight:800;font-size:13px;display:grid;place-items:center;margin-top:1px}
+.good{background:var(--sky-wash);border-radius:8px;padding:10px 13px;font-size:14px;margin-top:14px}
+.good b{color:var(--sky-deep)}
+.fix{list-style:none;padding:0;margin:0}
+.fix li{font-size:14.5px;padding:8px 0;border-top:1px solid var(--line)}
+.fix li:first-child{border-top:0}
+.fix li b{display:block;color:var(--bark)}
+.fix li span{color:var(--muted)}
 </style>
 </head>
 <body>
 <div class="wrap">
+
+<nav class="tabs" aria-label="Sections">
+  <div class="tabbar" role="tablist">
+    <button class="tab" id="tab-tracker" role="tab" aria-selected="true" type="button">Tracker</button>
+    <button class="tab" id="tab-guide" role="tab" aria-selected="false" type="button">How to</button>
+  </div>
+</nav>
+
+<div class="panel" id="panel-tracker">
 
 <header class="hero">
   <h1>Chico</h1>
   <p class="tagline">Eight weeks to build a recall that doesn't need a treat in your hand. <b>The collar comes later, or not at all.</b></p>
   <div class="track" id="track"></div>
   <div class="trackfoot"><span id="pct">0% complete</span><span>Week 1 &rarr; 8</span></div>
-  <a class="guidelink" href="exercises/">Exercise guide &rarr;</a>
+  <a class="guidelink" href="#guide">How to do each exercise &rarr;</a>
 </header>
 
 <section>
@@ -196,11 +251,11 @@ footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);font-si
       <div class="rday"><div class="rtag">Daycare days<br>&times;3</div>
         <div class="rtxt">One 10-minute session in the morning before drop-off. Nothing at night — he's cooked. Same facility every week, no rotating.</div></div>
       <div class="rday"><div class="rtag">Home days</div>
-        <div class="rtxt">Two 10-minute recall sessions. Plus one distance session with other dogs in view.</div></div>
+        <div class="rtxt">Two 10-minute recall sessions. Plus one distance session with other dogs in view. <a href="#guide/dogs">How to</a></div></div>
       <div class="rday"><div class="rtag">Weekends</div>
         <div class="rtxt">Yard work on the long line once you're past week 4. Sniff walks in quiet places.</div></div>
       <div class="rday"><div class="rtag">Every walk</div>
-        <div class="rtxt">Five minutes of sit, down and hand targets in the driveway before you move. Take the edge off where it's boring.</div></div>
+        <div class="rtxt">Five minutes of sit, down and hand targets in the driveway before you move. Take the edge off where it's boring. <a href="#guide/driveway">How to</a></div></div>
     </div>
   </div>
 </section>
@@ -208,7 +263,7 @@ footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);font-si
 <section>
   <h2>The program</h2>
   <p class="sub">Tap a phase to open it. Check a paw for each day you train.</p>
-  <a class="guidelink" href="exercises/">How to do each exercise &rarr;</a>
+  <a class="guidelink" href="#guide">How to do each exercise &rarr;</a>
   <div id="phases"></div>
 </section>
 
@@ -272,11 +327,253 @@ footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);font-si
   <button class="btn ghost" id="reset">Clear all progress</button>
 </footer>
 
+</div><!-- /panel-tracker -->
+
+<div class="panel" id="panel-guide" hidden>
+  <header class="ghero">
+    <h1 class="gh1">How to do it</h1>
+    <p class="tagline">Every exercise in Chico's program, step by step. Open the ones for this week; the rest will make sense when you get there.</p>
+    <nav class="jump" aria-label="Jump to section">
+      <a href="#guide/now">This week</a><a href="#guide/next">Weeks 3–4</a><a href="#guide/later">Later</a>
+    </nav>
+  </header>
+
+  <section>
+    <h2>Rules for every exercise</h2>
+    <div class="grules"><ol>
+      <li><b>Say it once.</b> Never repeat a cue. If he doesn't respond, the setup was too hard.</li>
+      <li><b>Empty hands.</b> Food lives in the pouch. It appears after he does the thing.</li>
+      <li><b>Read him first.</b> Not mid-scratch, mid-sniff or while eating. Wait three seconds.</li>
+      <li><b>Pay every time.</b> Real food, several small pieces for a recall.</li>
+      <li><b>Stop before he's bored.</b> Ten minutes max. End on a win.</li>
+    </ol></div>
+  </section>
+
+  <section class="gsec" id="g-now">
+    <h2>This week</h2>
+    <p class="sub">Indoors, line off. These run together in the same short sessions — plus the leash-up recall every time you head out.</p>
+    <div id="list-now"></div>
+  </section>
+  <section class="gsec" id="g-next">
+    <h2>Weeks 3–4</h2>
+    <p class="sub">Once he's whipping his head around the moment he hears "come".</p>
+    <div id="list-next"></div>
+  </section>
+  <section class="gsec" id="g-later">
+    <h2>Later</h2>
+    <p class="sub">Yard work, and the ones that need a second person.</p>
+    <div id="list-later"></div>
+  </section>
+</div><!-- /panel-guide -->
+
 </div>
 
 <script>
 document.documentElement.style.setProperty('--paw',
   "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cellipse cx='32' cy='44' rx='15' ry='13'/%3E%3Cellipse cx='14' cy='27' rx='7' ry='9'/%3E%3Cellipse cx='50' cy='27' rx='7' ry='9'/%3E%3Cellipse cx='24' cy='13' rx='7' ry='9'/%3E%3Cellipse cx='40' cy='13' rx='7' ry='9'/%3E%3C/svg%3E\")");
+
+const EX = [
+ {group:"now", id:"toss", title:"Treat-toss recall", cue:"come", when:"Every session · weeks 1–2",
+  why:"Creates distance without a line, and teaches the real skill: \"come\" means turn away from something and head back to you.",
+  need:"A pouch of small soft treats and a room with some open floor.",
+  steps:[
+   "Toss one treat 5–6 feet away. Let him go get it. Say nothing.",
+   "The moment he swallows and lifts his head — before he starts wandering — say \"come\" once, cheerful.",
+   "As he arrives, touch his collar, then pay from the pouch. Several small pieces.",
+   "Toss the next treat in the opposite direction. Repeat.",
+   "10–15 reps, then stop."
+  ],
+  good:"He spins around at the word, sometimes before he's finished chewing.",
+  fix:[
+   ["He doesn't turn","Don't repeat the word. Next rep, toss shorter and call a beat sooner. Or take a couple of steps backward as you call — movement away pulls him in."],
+   ["He's shadowing you and won't go after the toss","Toss further, or roll it so it's more interesting to chase."],
+   ["He's getting it every time","Level up one thing at a time: longer tosses, toss into a doorway, or wait 3–5 seconds after he eats so he starts sniffing around before you call."]
+  ]},
+ {group:"now", id:"leash", title:"Leash-up recall", cue:"come", when:"Every potty break and walk",
+  why:"He already comes and sits every time you pick up the leash — by the backyard door for potty, by the laundry room door for a walk. That's a perfect recall with no word attached. Name it, and \"come\" gets paired with the best payoff of his day.",
+  need:"The leash. No treats required — going out is the reward. A treat on top doesn't hurt.",
+  steps:[
+   "Pick up the leash at the door, same as always.",
+   "The moment he starts heading toward you, say \"come\" once. You're naming what he's already doing, not asking for it.",
+   "He arrives and sits. Wait for the sit before the leash goes on.",
+   "Clip on, then go out. The walk or the backyard is the payoff."
+  ],
+  good:"He's already on his way before the word is out of your mouth, and sits without being asked.",
+  fix:[
+   ["He's bouncing instead of sitting","Leash stays in your hand, not on him. Wait. Clip on only when he sits calmly."],
+   ["You say it before he's moving","Wait a beat. The word should land on a dog who's already coming, not one who's deciding."],
+   ["Tempted to pick up the leash to get him for a bath or the crate","Don't. The leash only ever means something good. Go get him instead."]
+  ]},
+ {group:"now", id:"touch", title:"Fist target", cue:"touch", when:"Start this week · 2 sessions to learn",
+  why:"Nose to your closed fist. It's a moving behavior that makes him orient to you. Later it's how you turn his head back on a walk without spending \"come\". A fist, because an open palm is his high-five signal and a pointing finger is his down.",
+  need:"Treats in the pouch or in your other hand — never in the target hand. Optional: a small sticky note.",
+  steps:[
+   "Make a loose fist, knuckles facing him, held low at his nose level and off to the side of your leg. Say nothing yet.",
+   "Start about an inch from his nose so he bumps it before he thinks to lift a paw.",
+   "The instant his nose touches, say \"yes\" and feed from the other hand.",
+   "Put the fist behind your back, then present it again. 10 reps.",
+   "Switch hands every few reps so he learns it's the fist, not the left hand.",
+   "Session two: once he bumps it the moment it appears, say \"touch\" just before you present it.",
+   "Then move it — a foot away, the other side, lower, then take a step back so he has to walk to it."
+  ],
+  good:"A quick, firm nose bump on your knuckles. Not a paw, not a lick.",
+  fix:[
+   ["He offers a paw or a high five","The fist disappears behind your back — no food. Present it again, closer to his nose. Only a nose earns anything."],
+   ["He keeps guessing other tricks","Put a small sticky note on the back of your fist for the first few sessions. It gives him something new to investigate. Peel it off once he's bumping reliably."],
+   ["He licks or nibbles","Don't pay it. Pull the fist away, present again."],
+   ["He stares at the treat hand","Keep the treat hand behind your back or in the pouch until after the touch."],
+   ["High five keeps coming back","Rest high five completely for a week while this is new. Bring it back once touch is solid."]
+  ]},
+ {group:"now", id:"collar", title:"Collar touch → pay", cue:"none", when:"Every recall · plus 5 random a day",
+  why:"Hands near his neck have to mean chicken. It stops the dance-just-out-of-reach move before it starts, and it's how you'll clip a leash on a dog who's just come to you.",
+  need:"Treats in the pouch.",
+  steps:[
+   "Every time he arrives on a recall, gently take hold of his collar — reach under his chin, not over his head.",
+   "Then pay. Always in that order: touch, then food.",
+   "Let go and release him.",
+   "Separately, five times a day at random: touch his collar, treat, walk away. No recall involved."
+  ],
+  good:"He leans into your hand or holds still when you reach for his collar.",
+  fix:[
+   ["He ducks away","Scale back: one finger touching the collar, then pay. Build up to a full hold over a few days."]
+  ]},
+ {group:"now", id:"driveway", title:"Driveway warm-up", cue:"sit · down · touch", when:"Before every walk",
+  why:"Takes the edge off where it's boring, before he sees another dog. Beats correcting your way through the first ten minutes.",
+  need:"Leash, pouch, five minutes.",
+  steps:[
+   "Walk out the door and stop on the driveway. Don't head down the street yet.",
+   "Sit, pay. Down, pay. Touch, pay.",
+   "Fist touch to your left, then your right, then a step back so he follows.",
+   "Mix them up for five minutes.",
+   "Start walking when he's checking in with you on his own instead of staring down the street."
+  ],
+  good:"He's looking up at you, not out at the neighborhood.",
+  fix:[
+   ["He won't take food out here","Too much going on. Start right outside the door, or even inside the doorway, and move out gradually."],
+   ["Hand target isn't solid yet","Just use sit and down until it is."]
+  ]},
+ {group:"now", id:"dogs", title:"Other dogs at a distance", cue:"none", when:"Home days · 10 minutes",
+  why:"Changes what another dog predicts. Right now dogs mean play. After this, dogs mean chicken from you — which makes it possible to pay attention to you when one's around.",
+  need:"A spot where dogs pass at 50–100 feet — a park edge, a parking lot, the far side of a wide street. Your best treats.",
+  steps:[
+   "Settle at a distance where he can still eat. That's your starting line.",
+   "The moment he notices a dog, start feeding — one piece every second or two.",
+   "When the dog leaves view, food stops completely.",
+   "Repeat with the next dog. Ten minutes, then go home.",
+   "When he sees a dog and turns back to you on his own, say \"yes\" and pay big. That's your signal to start a few feet closer next session."
+  ],
+  good:"He glances at the dog, then looks at you — expecting food.",
+  fix:[
+   ["He won't eat, stares, whines or lunges","You're too close. Back up until he eats again."],
+   ["You get surprised up close","Cross the street or turn and walk away. Don't correct the lunge — just leave."],
+   ["Tempted to ask for a sit or a \"come\"","Don't. This exercise asks nothing of him. You're only changing a feeling."]
+  ]},
+
+ {group:"next", id:"runaway", title:"Run-away recall", cue:"come", when:"Weeks 3–4",
+  why:"Builds speed. Speed is what survives distraction later. Also your answer when he stalls instead of repeating the cue.",
+  need:"A hallway or a long room. Pouch.",
+  steps:[
+   "Say \"come\" once.",
+   "If he hesitates, turn and jog away from him, clapping and making happy noise.",
+   "He'll chase. When he catches you, collar touch, then pay big.",
+   "Never say the word a second time."
+  ],
+  good:"He's running to you, not strolling.",
+  fix:[
+   ["He doesn't follow when you run","Make it more exciting — squeak, crouch down, jog faster. Soft dogs love a chase."]
+  ]},
+ {group:"next", id:"distract", title:"Recall from mild distraction", cue:"come", when:"Weeks 3–4",
+  why:"Teaches him that \"come\" works even when something else is interesting — and that coming to you doesn't end the fun.",
+  need:"A low-value distraction: a toy, a sniffy spot, a window. Pouch.",
+  steps:[
+   "Let him get mildly interested in the distraction — not deeply absorbed.",
+   "Say \"come\" once.",
+   "Collar touch, pay big.",
+   "Release him back to what he left: \"ok, go on\".",
+   "Work up the ladder: toy → window → a good sniff spot → a chew. Not the front door yet."
+  ],
+  good:"He leaves the thing, comes to you, and goes happily back when released.",
+  fix:[
+   ["He fails twice in a row","The distraction is too strong. Drop a rung, get an easy win, end there."]
+  ]},
+
+ {group:"later", id:"pingpong", title:"Ping-pong recall", cue:"come", when:"When someone else is home",
+  why:"Rapid reps at distance, and he learns the cue works for more than one person.",
+  need:"Two people at opposite ends of a hallway or the house, both with treats.",
+  steps:[
+   "Person A says \"come\" once. He goes to A. A touches collar and pays.",
+   "Person B says \"come\". He goes to B. B pays.",
+   "Alternate. Only the person calling pays. The other ignores him.",
+   "Brief the other person first: say it once, pay every time."
+  ],
+  good:"He's running back and forth, loving it.",
+  fix:[
+   ["He gets stuck at one person","That person is paying better or being more fun. Match each other."]
+  ]},
+ {group:"later", id:"yard", title:"Yard on a line", cue:"come", when:"Weeks 5–6",
+  why:"Outdoors is a different world to him. The line comes back here, because this is where ignoring you becomes a real option.",
+  need:"Fenced yard, 15 ft biothane line clipped to a harness or flat collar.",
+  steps:[
+   "Let the line drag. Don't hold it.",
+   "Same treat-toss setup, but outside.",
+   "If he ignores the cue, step on the line and calmly reel him in. Then pay anyway.",
+   "Recall randomly, 10–15 times, and release him back most times.",
+   "Move to the 30 ft line once he's solid at 15."
+  ],
+  good:"He comes as fast outside as inside.",
+  fix:[
+   ["He's worse outside than inside","Expected. Shorten the distance, start when nothing's happening in the yard, and build back up fast."]
+  ]}
+];
+
+
+function cueBadge(c){ return c==="none" ? '<span class="cuetag none">no cue</span>' : `<span class="cuetag">${c}</span>`; }
+function exCard(e){
+  return `<div class="ex" id="ex-${e.id}">
+    <button class="exhead" type="button" aria-expanded="false">
+      <span class="t"><strong>${e.title}</strong><span class="when">${e.when}</span></span>
+      ${cueBadge(e.cue)}
+      <svg class="caret" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 6l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+    <div class="exbody">
+      <p class="why">${e.why}</p>
+      <div class="glabel">You need</div><p class="need">${e.need}</p>
+      <div class="glabel">Steps</div>
+      <ol class="steps">${e.steps.map(s=>`<li><span>${s}</span></li>`).join("")}</ol>
+      <div class="good"><b>Good looks like:</b> ${e.good}</div>
+      ${e.fix.length?`<div class="glabel">If it's not working</div><ul class="fix">${e.fix.map(([h,x])=>`<li><b>${h}</b><span>${x}</span></li>`).join("")}</ul>`:""}
+    </div></div>`;
+}
+function renderGuide(){
+  ["now","next","later"].forEach(g=>{
+    document.getElementById("list-"+g).innerHTML=EX.filter(e=>e.group===g).map(exCard).join("");
+  });
+  document.querySelectorAll(".exhead").forEach(b=>b.addEventListener("click",()=>{
+    const ex=b.parentElement; ex.classList.toggle("open");
+    b.setAttribute("aria-expanded",ex.classList.contains("open")?"true":"false");
+  }));
+}
+function showTab(name,item){
+  const guide=name==="guide";
+  document.getElementById("panel-tracker").hidden=guide;
+  document.getElementById("panel-guide").hidden=!guide;
+  document.getElementById("tab-tracker").setAttribute("aria-selected",String(!guide));
+  document.getElementById("tab-guide").setAttribute("aria-selected",String(guide));
+  if(guide && item){
+    const el=document.getElementById("ex-"+item)||document.getElementById("g-"+item);
+    if(el){
+      if(el.classList.contains("ex")){ el.classList.add("open"); el.querySelector(".exhead").setAttribute("aria-expanded","true"); }
+      setTimeout(()=>el.scrollIntoView({block:"start"}),0);
+      return;
+    }
+  }
+  window.scrollTo(0,0);
+}
+function route(){
+  const h=decodeURIComponent(location.hash.slice(1));
+  if(h.indexOf("guide")===0) showTab("guide",h.split("/")[1]);
+  else showTab("tracker");
+}
 
 const PREP = [
   ["p1","Cue decided: \"come\"","Protect it for two weeks — only say it when he's close and will win."],
@@ -300,10 +597,10 @@ const GATE = [
 ];
 
 const PHASES = [
-  {n:"1", title:"Rebuild \"come\"", when:"Weeks 1–2 · indoors, line off", weeks:[1,2],
+  {n:"1", guide:["toss","leash","touch","collar"], title:"Rebuild \"come\"", when:"Weeks 1–2 · indoors, line off", weeks:[1,2],
    body:"<p>Close range, one cue, real payoff. Every rep is one he's certain to win. Line stays off indoors — on it he shadows you and there's no distance to call across.</p>",
    items:[
-     ["a6","Treat toss to create distance","Toss food 5–6 ft away, say \"come\" as he lifts his head. See the exercise guide."],
+     ["a6","Treat toss to create distance","Toss food 5–6 ft away, say \"come\" as he lifts his head. Steps in the How to tab."],
      ["a1","Empty hands, every rep","If he can see food before he moves, you're building the lure again."],
      ["a2","Say it once. Ever.","Repeating teaches him the first one is a suggestion."],
      ["a7","Read him before you call","Not mid-scratch, mid-sniff or while eating. Wait three seconds, then call."],
@@ -313,7 +610,7 @@ const PHASES = [
      ["a5","End before he's bored","Ten minutes max."]
    ],
    note:"<strong>Move on when he snaps his head around at the sound,</strong> before he's even moving — not when the calendar says so. A rebuilt word can need an extra week."},
-  {n:"2", title:"Distance and drive", when:"Weeks 3–4 · indoors", weeks:[3,4],
+  {n:"2", guide:["runaway","distract","pingpong"], title:"Distance and drive", when:"Weeks 3–4 · indoors", weeks:[3,4],
    body:"<p>Same rules, more room. Now you want him coming <em>fast</em>, not strolling in. Speed is what survives distraction later.</p>",
    items:[
      ["b1","Run away from him, clapping, when he stalls","Never repeat the cue. Soft dogs chase — use it."],
@@ -322,7 +619,7 @@ const PHASES = [
      ["b4","Release him back to what he left","Coming to you shouldn't end the fun."]
    ],
    note:"<strong>If he fails twice in a row, the picture is too hard.</strong> Back up, get an easy win, end there."},
-  {n:"3", title:"Yard on a line", when:"Weeks 5–6 · 15 ft line", weeks:[5,6],
+  {n:"3", guide:["yard"], title:"Yard on a line", when:"Weeks 5–6 · 15 ft line", weeks:[5,6],
    body:"<p>Fenced yard, line on, same rules. Outdoors is a different world to him — expect to lose ground at first and build it back fast.</p>",
    items:[
      ["c1","Start in the yard with nothing happening",""],
@@ -331,7 +628,7 @@ const PHASES = [
      ["c4","Add one distraction at a time","Never distance and distraction in the same session."]
    ],
    note:"<strong>Train him in the morning on daycare days.</strong> Evenings after daycare are wasted reps."},
-  {n:"4", title:"Other dogs, at distance", when:"Runs alongside · non-daycare days", weeks:[],
+  {n:"4", guide:["dogs"], title:"Other dogs, at distance", when:"Runs alongside · non-daycare days", weeks:[],
    body:"<p>Separate track from the recall, same eight weeks. He sees another dog and expects play, because four days a week that's what other dogs have meant. You're changing the prediction.</p>",
    items:[
      ["d1","Work at a distance where he can still eat","50 to 100 feet. If he won't take food, you're too close."],
@@ -475,6 +772,7 @@ function renderPhases(){
       <div class="pbody">
         ${p.locked?'<div class="lockmsg">Locked until both gate conditions below are checked. Opening it early is the most common way this goes wrong.</div>':""}
         ${p.body}
+        ${p.guide?`<div class="howto">How to: ${p.guide.map(id=>`<a href="#guide/${id}">${(EX.find(e=>e.id===id)||{}).title||id}</a>`).join(" · ")}</div>`:""}
         ${p.weeks.length?`<div class="weeks">${p.weeks.map(w=>`<div class="week"><span class="wlabel">Wk ${w}</span><div class="days">${
           [1,2,3,4,5,6,7].map(d=>{const k=`w${w}d${d}`;
             return `<button class="day" type="button" data-k="${k}" aria-pressed="${state.days[k]?"true":"false"}" aria-label="Week ${w} day ${d}"></button>`;}).join("")
@@ -579,12 +877,17 @@ document.getElementById("reset").addEventListener("click",()=>{
   save(); render();
 });
 
-const GUIDE_URL="https://claude.ai/artifact/Vv8QxBBsnBuUbQVqgy3eG8";
-if(!/github\.io$/.test(location.hostname)){
-  document.querySelectorAll(".guidelink").forEach(a=>{ a.href=GUIDE_URL; a.target="_blank"; a.rel="noopener"; });
-}
 document.getElementById("sdate").value=new Date().toISOString().slice(0,10);
+renderGuide();
 render();
+route();
+window.addEventListener("hashchange",route);
+document.getElementById("tab-tracker").addEventListener("click",()=>{ if(location.hash) history.pushState(null,"",location.pathname+location.search); route(); });
+document.getElementById("tab-guide").addEventListener("click",()=>{ location.hash="guide"; });
+document.addEventListener("click",e=>{
+  const a=e.target.closest('a[href^="#guide"]');
+  if(a && a.getAttribute("href")===location.hash){ e.preventDefault(); route(); }
+});
 initStore();
 </script>
 </body>
