@@ -141,6 +141,8 @@ textarea{resize:vertical;min-height:70px}
 .links a{font-weight:700;font-size:15px;display:block}
 .links em{font-style:normal;font-size:13px;color:var(--muted);display:block;margin-top:2px}
 
+.guidelink{display:inline-block;margin:12px 0 14px;font-size:14px;font-weight:700;text-decoration:none;
+  padding:8px 13px;border-radius:8px;background:var(--sky-wash);color:var(--sky-deep)}
 footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);font-size:12.5px;color:var(--muted);
   display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
 .status{font-size:11.5px;color:var(--muted)}
@@ -154,6 +156,7 @@ footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);font-si
   <p class="tagline">Eight weeks to build a recall that doesn't need a treat in your hand. <b>The collar comes later, or not at all.</b></p>
   <div class="track" id="track"></div>
   <div class="trackfoot"><span id="pct">0% complete</span><span>Week 1 &rarr; 8</span></div>
+  <a class="guidelink" href="exercises/">Exercise guide &rarr;</a>
 </header>
 
 <section>
@@ -179,7 +182,7 @@ footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);font-si
   <div class="card">
     <div id="prep"></div>
     <label class="fl" for="cue">His new recall cue</label>
-    <input type="text" id="cue" placeholder="here / aquí / vamos" autocomplete="off">
+    <input type="text" id="cue" placeholder="come" autocomplete="off">
     <label class="fl" for="start">Day 1 date</label>
     <input type="date" id="start">
   </div>
@@ -205,6 +208,7 @@ footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);font-si
 <section>
   <h2>The program</h2>
   <p class="sub">Tap a phase to open it. Check a paw for each day you train.</p>
+  <a class="guidelink" href="exercises/">How to do each exercise &rarr;</a>
   <div id="phases"></div>
 </section>
 
@@ -275,14 +279,15 @@ document.documentElement.style.setProperty('--paw',
   "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cellipse cx='32' cy='44' rx='15' ry='13'/%3E%3Cellipse cx='14' cy='27' rx='7' ry='9'/%3E%3Cellipse cx='50' cy='27' rx='7' ry='9'/%3E%3Cellipse cx='24' cy='13' rx='7' ry='9'/%3E%3Cellipse cx='40' cy='13' rx='7' ry='9'/%3E%3C/svg%3E\")");
 
 const PREP = [
-  ["p1","Pick the new cue and write it down","Zero history. Never the old word."],
-  ["p2","Tell the whole house the new cue and the rule","One person waving a treat first undoes a week."],
+  ["p1","Cue decided: \"come\"","Protect it for two weeks — only say it when he's close and will win."],
+  ["p2","Anyone who calls him follows the same three rules","Say it once. Only when he'll win. Pay every time. Brief people before they start calling him."],
   ["p3","Food lives in a pouch or on the counter — never in your hand first",""],
-  ["p4","Light line on him indoors","So ignoring you isn't one of the options while the word is still new."],
-  ["p5","Lock in one daycare facility, same three days","Stop rotating. Same staff, same group, same routine."]
+  ["p6","Treat stashes around the house","A jar in the kitchen, living room and by the back door. If \"come\" gets said, the payoff has to be within reach."],
+  ["p5","Lock in one daycare facility, same three days","Same staff, same group, same routine."],
+  ["p7","Ask daycare what word they use to call dogs in","If it's \"come\", ask them to use his name or a whistle instead."]
 ];
 const GEAR = [
-  ["g1","15 ft biothane long line","For indoor and early yard work."],
+  ["g1","15 ft biothane long line","For the yard, weeks 5–6. Indoors he shadows you on it, so it stays off inside."],
   ["g2","30 ft biothane long line","Weeks 5 onward."],
   ["g3","Treat pouch that opens one-handed","Fumbling for food is lost timing — and it tips him off before he moves."],
   ["g4","Real food rewards","Rotisserie chicken, string cheese, hot dog. Cut small."],
@@ -295,16 +300,19 @@ const GATE = [
 ];
 
 const PHASES = [
-  {n:"1", title:"Charge the word", when:"Weeks 1–2 · indoors", weeks:[1,2],
-   body:"<p>You're not asking for a behavior yet. You're wiring a sound to a payoff. Say the cue, food appears — he doesn't even have to move at first. Twenty reps a day in short bursts.</p>",
+  {n:"1", title:"Rebuild \"come\"", when:"Weeks 1–2 · indoors, line off", weeks:[1,2],
+   body:"<p>Close range, one cue, real payoff. Every rep is one he's certain to win. Line stays off indoors — on it he shadows you and there's no distance to call across.</p>",
    items:[
+     ["a6","Treat toss to create distance","Toss food 5–6 ft away, say \"come\" as he lifts his head. See the exercise guide."],
      ["a1","Empty hands, every rep","If he can see food before he moves, you're building the lure again."],
      ["a2","Say it once. Ever.","Repeating teaches him the first one is a suggestion."],
+     ["a7","Read him before you call","Not mid-scratch, mid-sniff or while eating. Wait three seconds, then call."],
      ["a3","Touch his collar, then feed — every arrival","Hands near his neck have to mean chicken."],
-     ["a4","Pay every single time","No lottery. You're building a reflex."],
+     ["a4","Pay every single time — several pieces","A rebuilt word needs a richer payoff than a fresh one."],
+     ["a8","Start the hand target — \"touch\"","Different word, same sessions. Two sessions to learn it."],
      ["a5","End before he's bored","Ten minutes max."]
    ],
-   note:"<strong>He already proved he can take a verbal cue under arousal</strong> — the door. This is the same mechanism, built the other way round."},
+   note:"<strong>Move on when he snaps his head around at the sound,</strong> before he's even moving — not when the calendar says so. A rebuilt word can need an extra week."},
   {n:"2", title:"Distance and drive", when:"Weeks 3–4 · indoors", weeks:[3,4],
    body:"<p>Same rules, more room. Now you want him coming <em>fast</em>, not strolling in. Speed is what survives distraction later.</p>",
    items:[
@@ -571,6 +579,10 @@ document.getElementById("reset").addEventListener("click",()=>{
   save(); render();
 });
 
+const GUIDE_URL="https://claude.ai/artifact/Vv8QxBBsnBuUbQVqgy3eG8";
+if(!/github\.io$/.test(location.hostname)){
+  document.querySelectorAll(".guidelink").forEach(a=>{ a.href=GUIDE_URL; a.target="_blank"; a.rel="noopener"; });
+}
 document.getElementById("sdate").value=new Date().toISOString().slice(0,10);
 render();
 initStore();
